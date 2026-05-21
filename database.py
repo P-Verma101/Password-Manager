@@ -30,7 +30,62 @@ def create_tables():
     #that enables the traversal over the record in a database. Basically,
     #this is used to execute SQL commands and get data from the database.
 
-    #This is where the actual tables will be
+    cur.execute("""CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY,
+                username TEXT,
+                master_password_hash BLOB,
+                salt BLOB
+                )""")
+    #Here the 'CREATE TABLE' makes a new table. the 'IF NOT EXISTS' is put
+    #in to make sure that the table is only created if it doesn't already
+    #exist. The  'id INTEGER PRIMARY KEY' creats a unique ID for each user 
+    #that is created. The 'username TEXT' creates a the username column that
+    #stores the username as a text. The 'master_password_hash BLOB' is the
+    #column that stores the hashed master password as a binary large object.
+    #Basically, this is used to store the hashed password in a secure way. The
+    # 'salt BLOB' is the column that stores the salt used for hashing the master
+    #pasword as a binary large object. Basically, this is used to store the salt
+    #in a secure way. Salt is random data that is used as an additional input to
+    #the hashing process. It is used to protect against certain types of attacks.
+
+    cur.execute("""
+                CREATE TABLE IF NOT EXISTS entries (
+                id INTEGER PRIMARY KEY,
+                user_id INTEGER,
+                service TEXT,
+                username TEXT,
+                password_enc BLOB,
+                FOREIGN KEY (user_id) REFERENCES users(id)
+                )
+                """)
+    #This line creates a new table that is named entries. It uses the 'execute' 
+    #method of the 'cur' variable to run the SQL command that creates the table.
+    #The 'CREATE TABLE IF NOT EXISTS entries' creats a tabled named entries and 
+    #The 'IF NOT EXISTS' ensures that no error occurs if the table already exists.
+    #This line will do NOTHING if the table already exists. The opening parenthesis
+    #mark the start of the column definitions. The 'id INTEGER PRIMARY KEY' defines
+    #a column named 'id' and gives it the data type of INTEGER. The 'PRIMARY KEY'
+    #assigns this column as the primary key for the table. This means that each value 
+    #in this column must be unique and CANNOT be NULL. The 'user_id INTEGER', creates
+    #a column named 'user_id' that has the INTEGER data type. This will store a
+    #reference to the 'id' column in the 'users' table. The 'service TEXT' creates a
+    #column named 'service' that has the TEXT data type. This will store the name of
+    #the service/website /app that the password is for. The 'username TEXT' is a column
+    #named 'username' that has the TEXT data type. This will store the username for the 
+    #service. The 'password_enc BLOB' creates a column named 'password_enc' which has the 
+    #BLOB data type. This will store the the encrypted password in a binary format. The 
+    #'FOREIGN KEY (user_id) REFERENCES users(id)' creates a foreign key constraint that 
+    #links the 'user_id' column in the 'entries' table to the 'id' column in the 'users'
+    #table. This means that each entry in the 'entries' table must be associated with 
+    #a valid user in the 'users' table.
 
     conn.commit()
+    #This line commits the changes to the database. This means that any 
+    #changes that were made to the database with the SQL commands with 
+    #the 'cur' variable will be saved to the database file.
+
     conn.close()
+    #This line closes the connection to the database. This is important 
+    #because it frees up resources and ensures that the database file is 
+    #not left open without reason. It is good practice to close the
+    #connection to the data when it is no longer needed.
