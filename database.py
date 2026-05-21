@@ -23,7 +23,12 @@ def create_tables():
     #database file that is created in the get_connection() function.
 
     cur = conn.cursor()
-    #This line creates a variable named 'cur'
+    #This line creates a variable named 'cur' that is set to equal
+    #'conn.cursor()'. This means that the program will use the 'cur'
+    #variable to execute teh SQL commands that will be used to create
+    #the tables in the database. The 'cursor' is a control structure
+    #that enables the traversal over the record in a database. Basically,
+    #this is used to execute SQL commands and get data from the database.
 
     #This is where the actual tables will be
 
