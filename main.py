@@ -6,6 +6,8 @@ from crypto import (
     encrypt_password,
     decrypt_password
 )
-#Both of thes
+#Both of these import commands will import the 2 modules that were
+#built in crypto.py and database.py. These will be used to handle 
+#the data storage and encryption for the password manager.
 
 def 
