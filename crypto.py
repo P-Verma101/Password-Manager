@@ -99,6 +99,14 @@ def decrypt_password(key: bytes, encrypted_password: bytes) -> str:
     #a string.
 
     f = Fernet(key)
-    #This creates
+    #This assigns the variable 'f' to a Fernet cipher instance. This intializes a Fernet 
+    #cipher with the given key. This must be the same key that is used during encryption.
+    #The cipher handles both encryption and decryption because this is a symmetric encryption, 
+    #meaning the same key is used for both processes.
 
     return f.decrypt(encrypted_password).decode()
+    #This line decrypts the encrypted password and returns the password as a string value. The 
+    #'f.decrypt(encrypted_password)' decrypts the encrypted password bytes using AES-128-CBC with
+    #HMAC authentication. This also verifies the HMAC authentication tag to ensure that the data is
+    #honest. If the data has been tampered with or the wrong key is used, then any exception will be
+    #shown.
