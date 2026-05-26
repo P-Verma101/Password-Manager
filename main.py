@@ -10,4 +10,14 @@ from crypto import (
 #built in crypto.py and database.py. These will be used to handle 
 #the data storage and encryption for the password manager.
 
-def 
+def master_password_exists():
+    #This function will
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("SELECT master_password_hash from LIMIT 1")
+    row = cur.fetchone()
+
+    conn.close()
+    return row is not None
+
