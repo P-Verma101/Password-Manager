@@ -29,5 +29,12 @@ def set_master_password():
     cur = conn.cursor()
 
     key = generate_key()
-    cur
+    cur.execute(
+        "INSERT INTO users (username, master_password_hash, salt) VALUES (?, ?, ?)", ("admin", hashed, b""))
+    
+    conn.commit()
+    conn.close()
+
+    print("Master password set successfully.")
+    return key
 
