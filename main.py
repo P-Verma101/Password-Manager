@@ -21,3 +21,13 @@ def master_password_exists():
     conn.close()
     return row is not None
 
+def set_master_password():
+    password = input("Create a master password: ")
+    hashed_password = hash_master_password(password)
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    key = generate_key()
+    cur
+
