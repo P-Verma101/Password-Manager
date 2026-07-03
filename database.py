@@ -89,3 +89,60 @@ def create_tables():
     #because it frees up resources and ensures that the database file is 
     #not left open without reason. It is good practice to close the
     #connection to the data when it is no longer needed.
+
+def create_user(username, master_password_hash, salt):
+    #This function registers a new user. This function stores the user's 
+    #usernames and a hash of their master password. This function also
+    #stores a salt which is used to make the hash resistent to precomputed
+    #or rainbow-table attacks. It DOES NOT store the raw password, not
+    #just the hash and the salt which is needed to verify it later.
+
+    conn = get_connection()
+    cur = conn.cursor()
+    
+    cur.execute("""INSERT INTO users (username, master_password_hash, salt) VALUES (?, ?, ?)""", (username, master_password_hash, salt))
+
+    conn.commit()
+    conn.close()
+
+def get_user(username):
+    #This function looks up a single user by their username and returns
+    #their stored information which in this case was their id, username,
+    #password hash and salt.
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""SELECT id, username, master_password_hash, salt, FROM users WHERE username = ?""", (username,))
+
+    row = cur.fetchone()
+    conn.close()
+    return row
+
+def add_entry(user_id, service, username, password_enc):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""INSERT INTO entries (user_id, service, username, password_enc) VALUES (?, ?, ?, ?)""", (user_id, service, username, password_enc))
+
+    conn.commit()
+    conn.close()
+
+
+def get_entries(user_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""SELECT id, service, username, password_enc FROM entires WHERE user_id = ?""", (user_id,))
+
+    rows = cur.fetchall()
+    conn.close()
+    return rows
+
+def delete_entry(entry_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("DELETE FROM entries WHERE id = ?", (entry_id,))
+    conn.commit()
+    conn.close()
+
