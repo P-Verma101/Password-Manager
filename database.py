@@ -134,7 +134,7 @@ def get_user(username):
 
     cur = conn.cursor()
 
-    cur.execute("""SELECT id, username, master_password_hash, salt, FROM users WHERE username = ?""", (username,))
+    cur.execute("""SELECT id, username, master_password_hash, salt FROM users WHERE username = ?""", (username,))
 
     row = cur.fetchone()
     #This line of code grabs one result row from the SQL query that just run. Since the a username should be unique,
@@ -192,20 +192,32 @@ def get_entries(user_id):
     #This line of code intializes a variable named 'cur' that is set equal to the 'conn.cursor()' which is responsible for
     #executing the SQL commands that will be used to create the tables in the database.
 
-    cur.execute("""SELECT id, service, username, password_enc FROM entires WHERE user_id = ?""", (user_id,))
+    cur.execute("""SELECT id, service, username, password_enc FROM entries WHERE user_id = ?""", (user_id,))
     #This line of code runs a SQL query that selects the 'id', 'service', 'username', and 'password_enc'
     #columns from the 'entries' table where the 'user_id' matches the provided user_id. The '?' is a 
     #placeholder that is safely filled with the user_id value to prevent the risk of SQL injection attacks.
 
     rows = cur.fetchall()
+    #This line of code retrieves all the rows that match the query and stores them in the 'rows' variable.
+    #This retirevies all the rows in tuple form and each tuple contains the entry's ID, service name, 
+    #username, and encrypted password. This allows the user to view and manage their stored passwords.
+
     conn.close()
+    #This line of code closes the connection to the database.
+
     return rows
+    #This line of code returns the list of tupels so that the calling code can use it to display the 
+    #entries to the user or perform other operations on them.
 
 def delete_entry(entry_id):
+    #This function deletes a specific password entry from the 'entries' and takes the entry's ID as an
+    #input. It removes the entry from the database, allowing the user to manage their stored passwords.
+
     conn = get_connection()
     cur = conn.cursor()
 
     cur.execute("DELETE FROM entries WHERE id = ?", (entry_id,))
+
     conn.commit()
     conn.close()
 
