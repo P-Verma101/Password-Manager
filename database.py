@@ -9,7 +9,7 @@ import sqlite3
 
 def get_connection():
     
-    return sqlite3.connect("valut.db") 
+    return sqlite3.connect("vault.db") 
     #This creates a file named 'valut.db' that is essentially 
     #the database file that needs to be made. it opens the database
     #so that the program can read and write into it. If the file
@@ -25,7 +25,7 @@ def create_tables():
     cur = conn.cursor()
     #This line creates a variable named 'cur' that is set to equal
     #'conn.cursor()'. This means that the program will use the 'cur'
-    #variable to execute teh SQL commands that will be used to create
+    #variable to execute the SQL commands that will be used to create
     #the tables in the database. The 'cursor' is a control structure
     #that enables the traversal over the record in a database. Basically,
     #this is used to execute SQL commands and get data from the database.
@@ -98,27 +98,58 @@ def create_user(username, master_password_hash, salt):
     #just the hash and the salt which is needed to verify it later.
 
     conn = get_connection()
+    #This line of code initalizes a variable named 'conn' that is set equal
+    #to the function 'get_connection()'. This means that the function will 
+    #use the 'conn' variable to interact with the file that is created in the 
+    #'get_connection()' function. This is important because it allows the
+    #function to read and write to the database file.
+
     cur = conn.cursor()
-    
+    #This line creates a variable named 'cur' that is set to equal
+    #'conn.cursor()'. This means that the program will use the 'cur'
+    #variable to execute the SQL commands that will be used to create
+    #the tables in the database. The 'cursor' is a control structure
+    #that enables the traversal over the record in a database. Basically,
+    #this is used to execute SQL commands and get data from the database.
+
+
     cur.execute("""INSERT INTO users (username, master_password_hash, salt) VALUES (?, ?, ?)""", (username, master_password_hash, salt))
+    #This line of code runs a SQL command that adds a new row to the users table. The '?' marks are placeholders and will be filled with
+    #the username, master_password_hash, and salt values that are passed to the function. 
 
     conn.commit()
+    #This line saves the changes made to the database.
+
     conn.close()
+    #This line of code closes the connection to the database, freeing up resources.
+
+
 
 def get_user(username):
     #This function looks up a single user by their username and returns
     #their stored information which in this case was their id, username,
     #password hash and salt.
+
     conn = get_connection()
+
     cur = conn.cursor()
 
     cur.execute("""SELECT id, username, master_password_hash, salt, FROM users WHERE username = ?""", (username,))
 
     row = cur.fetchone()
+    #This line of code grabs one result row from the SQL query that just run. Since the a username should be unique,
+    #there is at most one matching row, so it returns that single row as a tuple, or 'None' if no user matched.
+
     conn.close()
+    #This closes the database connection, smae as in the other functions.
+
     return row
+    #This sends that result back to whatever code called 'get_user()', so it can check if a user was found and use
+    #their stored hash/salt to verify a login.
 
 def add_entry(user_id, service, username, password_enc):
+    #This function a
+
     conn = get_connection()
     cur = conn.cursor()
 
