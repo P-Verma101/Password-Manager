@@ -148,22 +148,54 @@ def get_user(username):
     #their stored hash/salt to verify a login.
 
 def add_entry(user_id, service, username, password_enc):
-    #This function a
+    #This function a that saves a new password entry for a specific service/website into the 'entries' table and
+    #links it to the user who owns it.
 
     conn = get_connection()
+    #This line of code initalizes a variable named 'conn' that calls the 'get_connection()' function that returns
+    #a connection to the database file. This means that the function will use the 'conn' variable to interact with
+    #the file that is created in the 'get_connection()' function.
+
     cur = conn.cursor()
+    #This line of code creates a variable named 'cur' that is set to equal 'conn.cursor()'. This means that the 
+    #program will use the 'cur' variable to execute the SQL commands that will be used to create the tables in the 
+    #database. The 'cursor' part of this line is a control structure that enables the traversal over the record in
+    # a database. Basically, this is used to execute SQL commands and get data from the database. 
 
     cur.execute("""INSERT INTO entries (user_id, service, username, password_enc) VALUES (?, ?, ?, ?)""", (user_id, service, username, password_enc))
+    #This inserts a new row into the 'entries' table. It uses the '?' placeholders filled safely with the four values
+    #into the function. This is important because it prevents SQL injection attacks, which is when a malicious user
+    #tries to manipulate the SQL query by inserting special characters or SQL commands into the input fields.
 
     conn.commit()
+    #This line saves the changes made to the database. It is important because it ensures that the new entry is
+    #actually stored in the database file. Without this line, the new entry would not be saved and would be lost 
+    #when the connection is closed.
+
     conn.close()
+    #This line of code closes the connection to the database. This is important because it frees up resources and
+    #ensures that the database file is not left open without reason. It is good practice to close the connection
+    #to the database when it is no longer needed.
 
 
 def get_entries(user_id):
+    #This function retrieves all the password entries belong to a specfic user. It takes the user's ID as input
+    #and returns a list of tuples, where each tuple contains the entry's ID, service name, username, and encrypted
+    #password. This allows the user to view and manage their stored passwords.
+
     conn = get_connection()
+    #This line of code initalizes a variable named 'conn' variable and is set equal to the 'get_connection()' function.
+    #This means that the function will use the 'conn' variable to interact with the file that is created in the 
+    #'get_connection()' function. This is important because it allows the function to read and write to the database file.
+
     cur = conn.cursor()
+    #This line of code intializes a variable named 'cur' that is set equal to the 'conn.cursor()' which is responsible for
+    #executing the SQL commands that will be used to create the tables in the database.
 
     cur.execute("""SELECT id, service, username, password_enc FROM entires WHERE user_id = ?""", (user_id,))
+    #This line of code runs a SQL query that selects the 'id', 'service', 'username', and 'password_enc'
+    #columns from the 'entries' table where the 'user_id' matches the provided user_id. The '?' is a 
+    #placeholder that is safely filled with the user_id value to prevent the risk of SQL injection attacks.
 
     rows = cur.fetchall()
     conn.close()
