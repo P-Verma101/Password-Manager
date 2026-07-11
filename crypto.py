@@ -10,6 +10,8 @@ import bcrypt
 #to decrypt when decrypting the stored passwords.
 from cryptography.fernet import Fernet
 
+
+
 def hash_master_password(password: str) -> bytes:
     #This function uses the 'bcrypt' library to securely 
     #hash the password. This function takes the parametter 
@@ -41,13 +43,15 @@ def hash_master_password(password: str) -> bytes:
     return hashed
     #This variable returns the hashed password to the caller.
 
+
+
 def verify_master_password(password: str, hashed: bytes) -> bool:
     #This function uses the 'bcrypt' library to verify if a provided password
     #matches a stored hash. It takes the 'password' as a string and the 'hashed'
     #password as bytes, and returns a boolean which indicates whether the password
     #is correct or not. 
 
-    ssword_bytes = password.encode()
+    password_bytes = password.encode()
     #This 'ssword_bytes' variable converts the plaintext password string into bytes.
     #The '.encode()' is a string method that converts a string into its UTF-8 byte
     #representation.
@@ -57,6 +61,8 @@ def verify_master_password(password: str, hashed: bytes) -> bool:
     #password and the stored hash, then compares them. It automatically extracts the
     #sat from the stored hash and applies it to the imput password. If they match it returns
     #True, otherwise it returns False.
+
+
 
 def generate_key() -> bytes:
     #This function generates a cryptographic key using 'Fernet' encryption algorithm from the
@@ -68,6 +74,8 @@ def generate_key() -> bytes:
     #authentication. The 'generate_key()' is a class method that generates a random 32-byte
     #also known as 256-bit key, which is suitable for use with Fernet encryption. The key 
     #is URL-safe base64 encoded, resulting in 44 characters when converted to a string. 
+
+
 
 def encrypt_password(key: bytes, password: str) -> bytes:
     #This function encrypts a password using the 'Fernet' encryption algorithm from the 
@@ -89,6 +97,8 @@ def encrypt_password(key: bytes, password: str) -> bytes:
     #random initialization vector (IV), and an authenication tag. The output is a
     #URL-safe base64 encoded string when converted to a string, which is suitable
     #for storage and transmission.
+
+
 
 def decrypt_password(key: bytes, encrypted_password: bytes) -> str:
     #This function decrypts the encrypted password and converts it back to a string.
