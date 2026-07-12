@@ -59,11 +59,29 @@ def login():
     #This line of code asks the user to input a password in front of "Master Password: "
 
     user = get_user(username)
+    #This line of code sets a variable 'user' equal to the 'get_user' function that passes
+    #the variable 'username' as an argument. This variable looks up the stored user row by 
+    #username and sets it equal to the 'user' variable.
+
     if not user:
+        #This 'if' conditional deals with the aftermath of, if nothing is found. 
+
         print("User not found.")
+        #If this conditional is True then the words "User not found." are printed to the
+        #screen.
+
         return None
+        #This returns 'None' to the screen after the message it printed because the conditional
+        #is true.
 
     user_id, stored_username, stored_hash, stored_salt = user
+    #This line of code takes the 'user' variable which is a single row returned from the 'get_user'
+    #function as a tuple and splits it into four separate variables, one for each column in that row.
+    #This means that the variable 'user_id' is given the value of id, the variable 'stored_username'
+    #is assigned the username value from the 'get_user' function, the variable 'stored_hash' is
+    #assigned the 'master_password_hash' value from the 'get_user' function and the 'stored_salt' variable
+    #is assigned the 'salt' value from the 'get_user' function. This method is called tuple unpacking.
+    #Instead of accessing each value awkwardly by index    
 
     if verify_master_password(master_password, stored_hash):
         print("Login successful!")
