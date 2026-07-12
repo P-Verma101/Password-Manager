@@ -1,3 +1,7 @@
+#This code imports different functions from the 'database.py' and the 'crypto.py'
+#files in the same directory. The 'database.py' file contains functions for interacting
+#with the database. The 'crypto.py' file contains functions for hashing and verifying the
+#master password, generating a cryptographic key, and encrypting and decrypting passwords.
 from database import (
     create_tables,
     get_connection,
@@ -15,25 +19,44 @@ from crypto import(
     encrypt_password,
     decrypt_password
 )
-#This code imports different functions from the 'database.py' and the 'crypto.py'
-#files in the same directory. The 'database.py' file contains functions for interacting
-#with the database. The 'crypto.py' file contains functions for hashing and verifying the
-#master password, generating a cryptographic key, and encrypting and decrypting passwords.
+
 
 def register():
+    #This function prints a header for the registration screen
+
     print("\n=== Register New User ===")
+    #This line of code prints the words 'Register New User' at the top of the screen
+
     username = input("Choose a username: ")
+    #This line of code asks the user to choose a username
+
     master_password = input("Choose a master password: ")
+    #This line of code asks the user to input a master password
 
-    master_hash, salt = hash_password(master_password)
+    master_hash = hash_master_password(master_password)
+    #This line of code hashes the password using bcrypt. This is because the bcrypt embeds
+    #the salt inside the hash inside itself. Only one value results from this.
 
-    create_user(username, master_hash, salt)
+
+    create_user(username, master_hash, None)
+    #This line of code saves the new user and passes 'None' for the salt column because it
+    #is no longer generated separately.
+
     print("User registered successfully!")
+    #This line of code prints "User registered successfully!" to the screen
+
 
 def login():
+    #This line of code prints a header to the screen.
+
     print("\n=== Login ===")
+    #This line of code prints the word "Login" to the screen as a header
+
     username = input("Username: ")
+    #This line of code asks the user to input a username in front of "Username: "
+
     master_password = input("Master Password:")
+    #This line of code asks the user to input a password in front of "Master Password: "
 
     user = get_user(username)
     if not user:
@@ -42,7 +65,7 @@ def login():
 
     user_id, stored_username, stored_hash, stored_salt = user
 
-    if verify_password(master_password, stored_hash, stored_salt):
+    if verify_master_password(master_password, stored_hash):
         print("Login successful!")
         return user_id
     else:
