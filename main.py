@@ -139,6 +139,7 @@ def main():
             register()
 
         elif choice == "2":
+            user_id = login()
             if user_id:
                 while True:
                     print("\n=== Dashboard ===")
