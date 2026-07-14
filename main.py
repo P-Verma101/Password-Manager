@@ -92,13 +92,25 @@ def login():
         return user_id
     
     else:
+        #This is part of the conditional and is entered if the first part (The 'if' part) fails. This part of
+        #the conditional statrment prints out the words "Incorrect password." to the screen and returns 'None'.
         print("Incorrect password.")
         return None
     
 def add_new_entry(user_id):
+    #This is a function that prompts the user for details about the saved password. It prompts for the service
+    #name, encrypts the password, and stores the entry in the database under the given user. This function takes
+    #the user_id as an argument.
+
     print("\n=== Add New Entry ===")
+    #This line of code adds the words 'Add New Entry' as a banner.
+
     service = input("Service Name: ")
+    #This line of code creates a variable 'service', that outputs the words 'Service Name: ' and prompts the user 
+    #for the name of the service that the password is being saved for.
+
     username = input("Service Username: ")
+    #This line of code creates a variable 'username'
     raw_password = input("Service password: ")
 
     encrypted = encrypt_password(raw_password)
