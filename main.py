@@ -84,8 +84,13 @@ def login():
     #Instead of accessing each value awkwardly by index    
 
     if verify_master_password(master_password, stored_hash):
+        #This is a conditional statement. This line first calls the verify_master_password function that runs
+        #and returns either true or false based on whether the plaintext password and user that were just 
+        #entered were successfully pulled from the database. If the pull is successful then the result is
+        #'True' then the message "Login successful!" is printed and the user id is returned.
         print("Login successful!")
         return user_id
+    
     else:
         print("Incorrect password.")
         return None
