@@ -115,7 +115,7 @@ def create_user(username, master_password_hash, salt, enc_key):
     #this is used to execute SQL commands and get data from the database.
 
 
-    cur.execute("""INSERT INTO users (username, master_password_hash, salt, enc_key) VALUES (?, ?, ?)""", (username, master_password_hash, salt, enc_key))
+    cur.execute("""INSERT INTO users (username, master_password_hash, salt, enc_key) VALUES (?, ?, ?, ?)""", (username, master_password_hash, salt, enc_key))
     #This line of code runs a SQL command that adds a new row to the users table. The '?' marks are placeholders and will be filled with
     #the username, master_password_hash, and salt values that are passed to the function. 
 
