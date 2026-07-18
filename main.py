@@ -37,8 +37,9 @@ def register():
     #This line of code hashes the password using bcrypt. This is because the bcrypt embeds
     #the salt inside the hash inside itself. Only one value results from this.
 
+    enc_key = generate_key()
 
-    create_user(username, master_hash, None)
+    create_user(username, master_hash, None, enc_key)
     #This line of code saves the new user and passes 'None' for the salt column because it
     #is no longer generated separately.
 
@@ -74,7 +75,7 @@ def login():
         #This returns 'None' to the screen after the message it printed because the conditional
         #is true.
 
-    user_id, stored_username, stored_hash, stored_salt = user
+    user_id, stored_username, stored_hash, stored_salt, stored_key = user
     #This line of code takes the 'user' variable which is a single row returned from the 'get_user'
     #function as a tuple and splits it into four separate variables, one for each column in that row.
     #This means that the variable 'user_id' is given the value of id, the variable 'stored_username'
@@ -95,9 +96,9 @@ def login():
         #This is part of the conditional and is entered if the first part (The 'if' part) fails. This part of
         #the conditional statrment prints out the words "Incorrect password." to the screen and returns 'None'.
         print("Incorrect password.")
-        return None
+        return None, None
     
-def add_new_entry(user_id):
+def add_new_entry(user_id, key):
     #This is a function that prompts the user for details about the saved password. It prompts for the service
     #name, encrypts the password, and stores the entry in the database under the given user. This function takes
     #the user_id as an argument.
@@ -110,15 +111,24 @@ def add_new_entry(user_id):
     #for the name of the service that the password is being saved for.
 
     username = input("Service Username: ")
-    #This line of code creates a variable 'username'
-    raw_password = input("Service password: ")
+    #This line of code creates a variable 'username' that outputs the words 'Service Username: ' and prompts the
+    #user to enter the username that they used for that service.
 
-    encrypted = encrypt_password(raw_password)
+    raw_password = input("Service password: ")
+    #This line of code creates a variable 'raw_password' that outputs the text 'Service password: ' and then prompts
+    #the user to enter the password for the service that they want to save to the password manager
+
+    encrypted = encrypt_password(key, raw_password)
+    #This line of code creates a variable 'encrypted' that is set equal to the encrypt_password function with the
+    #variable varable raw_password as an argument. This line will enter the function encrypt_password function that
+    #was imported from the crypto file and will encrypt the password. 
+
     add_entry(user_id, service, username, encrypted)
+
 
     print("Entry added successfully!")
 
-def view_entries(user_id):
+def view_entries(user_id, key):
     print("\n=== Your Entries ===")
     entries = get_entries(user_id)
 
@@ -128,7 +138,7 @@ def view_entries(user_id):
     
     for entry in entries:
         entry_id, service, username, enc_pwd = entry
-        decrypted = decrypt_password(enc_pwd)
+        decrypted = decrypt_password(key, enc_pwd)
         print(f"\nID: {entry_id}")
         print(f"Service: {service}")
         print(f"Username: {username}")
@@ -136,7 +146,7 @@ def view_entries(user_id):
 
 def delete_entry_cli(user_id):
     print("\n=== Delete Entry ===")
-    entry_id = input("Enter entry ID to delete: ")
+    entry_id = int(input("Enter entry ID to delete: "))
 
     delete_entry(entry_id)
     print("Entry deleted successfully!")
@@ -156,7 +166,7 @@ def main():
             register()
 
         elif choice == "2":
-            user_id = login()
+            user_id, key = login()
             if user_id:
                 while True:
                     print("\n=== Dashboard ===")
@@ -178,11 +188,11 @@ def main():
                     else:
                         print("Invalid option.")
 
-            elif choice == "3":
+        elif choice == "3":
                 print("Goodbye")
                 break
 
-            else:
+        else:
                 print("Invalid option.")
 
 if __name__ == "__main__":
