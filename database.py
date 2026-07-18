@@ -34,8 +34,10 @@ def create_tables():
                 id INTEGER PRIMARY KEY,
                 username TEXT,
                 master_password_hash BLOB,
-                salt BLOB
+                salt BLOB,
+                enc_key BLOB
                 )""")
+    
     #Here the 'CREATE TABLE' makes a new table. the 'IF NOT EXISTS' is put
     #in to make sure that the table is only created if it doesn't already
     #exist. The  'id INTEGER PRIMARY KEY' creats a unique ID for each user 
@@ -90,7 +92,7 @@ def create_tables():
     #not left open without reason. It is good practice to close the
     #connection to the data when it is no longer needed.
 
-def create_user(username, master_password_hash, salt):
+def create_user(username, master_password_hash, salt, enc_key):
     #This function registers a new user. This function stores the user's 
     #usernames and a hash of their master password. This function also
     #stores a salt which is used to make the hash resistent to precomputed
@@ -113,7 +115,7 @@ def create_user(username, master_password_hash, salt):
     #this is used to execute SQL commands and get data from the database.
 
 
-    cur.execute("""INSERT INTO users (username, master_password_hash, salt) VALUES (?, ?, ?)""", (username, master_password_hash, salt))
+    cur.execute("""INSERT INTO users (username, master_password_hash, salt, enc_key) VALUES (?, ?, ?)""", (username, master_password_hash, salt, enc_key))
     #This line of code runs a SQL command that adds a new row to the users table. The '?' marks are placeholders and will be filled with
     #the username, master_password_hash, and salt values that are passed to the function. 
 
@@ -134,7 +136,7 @@ def get_user(username):
 
     cur = conn.cursor()
 
-    cur.execute("""SELECT id, username, master_password_hash, salt FROM users WHERE username = ?""", (username,))
+    cur.execute("""SELECT id, username, master_password_hash, salt, enc_key FROM users WHERE username = ?""", (username,))
 
     row = cur.fetchone()
     #This line of code grabs one result row from the SQL query that just run. Since the a username should be unique,
