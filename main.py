@@ -124,9 +124,12 @@ def add_new_entry(user_id, key):
     #was imported from the crypto file and will encrypt the password. 
 
     add_entry(user_id, service, username, encrypted)
+    #This line of code calls the add_entry function and passes user_id, service, username, and encrypted as the
+    #arguments. This will add the entry to the database.
 
 
     print("Entry added successfully!")
+    #This line of code 
 
 def view_entries(user_id, key):
     print("\n=== Your Entries ===")
